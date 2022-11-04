@@ -1,0 +1,25 @@
+{
+  "name": "wechat-bot",
+  "version": "1.0.0",
+  "description": "基于TS的自定义微信机器人",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/WallerChen/wechat-bot.git"
+  },
+  "keywords": [
+    "微信",
+    "机器人",
+    "自定义",
+    "wechaty"
+  ],
+  "author": "wallerChen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/WallerChen/wechat-bot/issues"
+  },
+  "homepage": "https://github.com/WallerChen/wechat-bot#readme"
+}
