@@ -7,6 +7,7 @@
     "node_modules/",
     "dist/",
     "tests/fixtures/",
+    "module/**/*.ts"
   ],
   "include": [
     "app/**/*.ts",
@@ -16,5 +17,6 @@
     "scripts/**/*.ts",
     "src/**/*.ts",
     "tests/**/*.spec.ts",
+    "module/**/*.ts"
   ],
 }
