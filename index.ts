@@ -7,6 +7,7 @@
 // https://github.com/motdotla/dotenv/issues/89#issuecomment-587753552
 import 'dotenv/config.js'
 import {BosClient} from '@baiducloud/sdk';
+import schedule from "node-schedule";
 import md5 from 'md5';
 import fs from 'fs';
 
@@ -115,16 +116,21 @@ function onScan (qrcode: string, status: ScanStatus) {
 function onLogin (user: Contact) {
   log.info('StarterBot', '%s login', user)
   // 群聊管理
-  let manageRoomList = ['脱单1班','脱单2班','脱单3班','脱单4班'];
+  let manageRoomList = ['富一代'];
   // 对群聊添加监听群成员
   for (const roomName of manageRoomList) {
     manageRoom(roomName);
   }
   // 发布订阅 订阅最新话题内容 对群聊发送
   for (const roomName of manageRoomList) {
-    getRoomTopic(roomName);
+    // 定义规则
+    let rule = new schedule.RecurrenceRule();
+    rule.second = [0, 10, 20, 30, 40, 50]; // 
+    let job = schedule.scheduleJob(rule, function(){
+      console.log('123213123');
+      getRoomTopic(roomName);
+    });
   }
- 
   // setInterval(() => {
   //   userMapQuery.forEach(item => {
   //      setTimeout(() => {
@@ -297,18 +303,33 @@ async function manageRoom(roomName) {
 }
 // 群聊话题订阅
 async function getRoomTopic(roomName) {
+  const room = await bot.Room.find({ topic: new RegExp(roomName)});
+  // room?.memberAll()
+  const memberList = await room.memberAll()
+  console.log(`room all member list: `, JSON.stringify(memberList))
+  // room?.say('123123 ', memberList);
+  // room?.alias()
+    // const alias = await room?.alias("所有人");
+    // console.log(`${contact.name()} alias is ${alias}`)
 
+  // await room?.say(`@所有人 晚上好宝们，晚上是个非常适合聊情感的时间，
+
+  // 为了让大家可以更好的了解彼此，我们会定期准备些『恋爱话题』让大家有观点的碰撞(支持多元、礼貌第一哟)~~~`);
+  // await new Promise((r) => setTimeout(r, 10 * 1000));
+  // await room?.say(`今天好奇大家【你能接受另一半有关系很好的异性朋友么？你接受的界限在哪儿？】`);
+  // await new Promise((r) => setTimeout(r, 10 * 1000));
+  // await room?.say(` 记得多出来走走哟，离找到心仪的TA&观点match的小伙伴更进一步🌸`);
+  // await new Promise((r) => setTimeout(r, 10 * 1000));
 }
 
 async function checkRoomJoin(room:any, inviteeList:any, inviter:any) {
-  log.info(
-    "Bot",
-    'checkRoomJoin("%s", "%s", "%s")',
-    await room.topic(),
-    inviteeList.map((c:any) => c.name()).join(","),
-    inviter.name()
-  );
-
+  // log.info(
+  //   "Bot",
+  //   'checkRoomJoin("%s", "%s", "%s")',
+  //   await room.topic(),
+  //   inviteeList.map((c:any) => c.name()).join(","),
+  //   inviter.name()
+  // );
   try {
     // let to, content
     //  TODO: 群聊人数统计并沟通
@@ -328,7 +349,6 @@ async function checkRoomJoin(room:any, inviteeList:any, inviter:any) {
       // setTimeout((_) => inviteeList.forEach((c:any) => room.del(c)), 10 * 1000);
     // } 
     // else {
-
       // TODO 进群需要发的文案
       await room.say(`欢迎${inviteeList.map((c:any) => c.name()).join(",")}宝贝进群🥰~ 
       记得改名哟，蹲个自我介绍！ （p.s. 咋改名+我们写的走心群介绍可以看公告小作文）
@@ -359,9 +379,17 @@ async function onFriendship(friendship) {
           console.log("before accept");
           await friendship.accept();
     
-          await new Promise((r) => setTimeout(r, 1000));
-          await friendship.contact().say("hello from Wechaty");
-          console.log("after accept");
+          await new Promise((r) => setTimeout(r, 3000));
+          await friendship.contact().say(`欢迎宝贝来到最有趣有爱的“互联网人脱单群”！为了确保群的质量和真实性，咱要回答几个简单的问题通关进群哈，进群也可以放心些~~：
+          1、 宝确认自己是单身哈？
+          2、 发下工卡or办公软件首页截图看下哟（以防没带工卡），不可以码住名字和照片哈（仅进群用）~
+          3、宝说下base地
+          4、pick想进
+          ① 押金群（更活泼~进群必须完成「最低30字的自我介绍」+「1个月不被举报(即维护社群有爱氛围)」两项任务便退💰，押金💰30，仅推动大家做自我介绍&聊天/无商业属性，纯自我选择哈）
+          ② 普通群（更随意~无任何任务）
+          
+          `);
+          // console.log("after accept");
         } else {
           logMsg =
             "not auto accepted, because verify message is: " + friendship.hello();
