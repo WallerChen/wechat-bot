@@ -122,7 +122,7 @@ function onLogin (user: Contact) {
   }
   // 发布订阅 订阅最新话题内容 对群聊发送
   for (const roomName of manageRoomList) {
-    manageRoom(roomName);
+    getRoomTopic(roomName);
   }
  
   // setInterval(() => {
@@ -295,6 +295,10 @@ async function manageRoom(roomName) {
     log.warn("Bot", 'Room.find rejected: "%s"', e);
   }
 }
+// 群聊话题订阅
+async function getRoomTopic(roomName) {
+
+}
 
 async function checkRoomJoin(room:any, inviteeList:any, inviter:any) {
   log.info(
@@ -374,7 +378,6 @@ async function onFriendship(friendship) {
   } catch (e) {
     logMsg = e.message;
   }
-
   console.log(logMsg);
   await fileHelper.say(logMsg);
 }
